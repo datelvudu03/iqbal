@@ -6,7 +6,6 @@ import com.example.demo.repo.service.ProductService;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 
 public class InsertItem implements ActionListener {
@@ -19,7 +18,7 @@ public class InsertItem implements ActionListener {
 
     static JTextField name,price,quantity;
     // JFrame
-    static JFrame f;
+    static JFrame jFrame;
     // JButton
     static JButton submit;
     // label to display text
@@ -27,7 +26,7 @@ public class InsertItem implements ActionListener {
 
     public void showInsertItem(){
 
-        f = new JFrame("Add Product");
+        jFrame = new JFrame("Add Product");
 
         // create a label to display text
         nameLabel = new JLabel("Product name:");
@@ -58,10 +57,10 @@ public class InsertItem implements ActionListener {
         jPanel.add(quantityLabel);jPanel.add(quantity);jPanel.add(new JSeparator());
         jPanel.add(submit);
         // add panel to frame
-        f.add(jPanel);
+        jFrame.add(jPanel);
         // set the size of frame
-        f.setSize(500, 300);
-        f.setVisible(true);
+        jFrame.setSize(500, 300);
+        jFrame.setVisible(true);
 
     }
     // if the button is pressed
@@ -69,9 +68,15 @@ public class InsertItem implements ActionListener {
     public void actionPerformed(ActionEvent e){
         String s = e.getActionCommand();
         if (s.equals("submit")) {
-            Product product = new Product( name.getText(), Integer.parseInt(price.getText()),Integer.parseInt(quantity.getText()));
-            saveData(product);
-            System.out.println("OK");
+
+                try{
+                    Product product = new Product( name.getText(), Integer.parseInt(price.getText()),Integer.parseInt(quantity.getText()));
+                    saveData(product);
+                    jFrame.dispose();
+                }catch(Exception exception){
+                    JOptionPane.showMessageDialog(jFrame, "Price or Quantity has to a number.");
+                }
+
         }
     }
 

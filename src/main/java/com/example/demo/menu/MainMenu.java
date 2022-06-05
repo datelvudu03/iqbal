@@ -11,7 +11,7 @@ public class MainMenu {
 
 
 
-    private static JFrame frame;
+    private static JFrame jFrame;
     private static JButton insertButton,viewButton,updateButton,deleteButton;
 
     public MainMenu(ProductService productService) {
@@ -21,7 +21,7 @@ public class MainMenu {
 
     public void showMenu(){
 
-        frame = new JFrame();
+        jFrame = new JFrame();
         JButton viewButton = new JButton( new AbstractAction("View Product") {
             @Override
             public void actionPerformed( ActionEvent e ) {
@@ -57,9 +57,9 @@ public class MainMenu {
         panel.add(viewButton);panel.add(new JSeparator());
         panel.add(updateButton);panel.add(new JSeparator());
         panel.add(deleteButton);panel.add(new JSeparator());
-        frame.add(panel);
-        frame.setSize(500, 300);
-        frame.setVisible(true);
+        jFrame.add(panel);
+        jFrame.setSize(500, 300);
+        jFrame.setVisible(true);
 
     }
 

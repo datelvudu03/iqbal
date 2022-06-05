@@ -10,7 +10,7 @@ import java.util.Random;
 
 @Entity
 public class Product {
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private int price,quantity;

@@ -12,17 +12,15 @@ public class UpdateItem {
     public UpdateItem(ProductService productService) {
         this.productService = productService;
     }
-    private JFrame frame = new JFrame("Update Product");
+    private JFrame jFrame = new JFrame("Update Product");
 
     private JTextField searchTextField, nameTextField, priceTextField, quantityTextField;
 
     private JLabel searchLabel,nameLabel,priceLabel,quantityLabel;
 
     public void showUpdateItem(){
-        searchLabel = new JLabel("Search");
-        nameLabel = new JLabel("Name:");
-        priceLabel = new JLabel("Price:");
-        quantityLabel = new JLabel("Quantity:");
+        searchLabel = new JLabel("Find product by ID(Type only number):");
+
         nameTextField = new JTextField(20);
         priceTextField = new JTextField(20);
         quantityTextField = new JTextField(20);
@@ -30,46 +28,94 @@ public class UpdateItem {
         searchTextField = new JTextField(20);
 
         searchLabel.setLabelFor(searchTextField);
+
+        JPanel jPanel = new JPanel();
         JButton updateButton = new JButton( new AbstractAction("Search") {
             @Override
             public void actionPerformed( ActionEvent e ) {
                 String text = searchTextField.getText();
-                System.out.println(text);
-
-                if (findData(text) != null){
-                    Product product = findData(text);
+                boolean isInteger = isStringInteger(text);
+                //text = "PD-"+ text;
+                if (isInteger && findData(Long.parseLong(text)) != null){
+                    Product product = findData(Long.parseLong(text));
                     nameTextField = new JTextField(product.getName(),20);
                     priceTextField =new JTextField(String.valueOf(product.getPrice()),20);
                     quantityTextField = new JTextField(String.valueOf(product.getQuantity()),20);
-                    JPanel panel2 = new JPanel();
-// panel2 = new JPanel(new GridLayout(1, 2 ));//why this it will overwrite the above layout
-                    panel2.add(nameTextField);
-                    panel2.add(priceTextField);
-                    panel2.add(quantityTextField);
-                    frame.add(panel2);
-                    frame.revalidate();
-                    frame.repaint();
+
+                    nameLabel = new JLabel("Name:");
+                    priceLabel = new JLabel("Price:");
+                    quantityLabel = new JLabel("Quantity:");
+
+                    nameLabel.setLabelFor(nameTextField);
+                    priceLabel.setLabelFor(priceLabel);
+                    quantityLabel.setLabelFor(quantityLabel);
+
+                    JButton updateButton = new JButton( new AbstractAction("Update Product") {
+                        @Override
+                        public void actionPerformed( ActionEvent e ) {
+                            product.setName(nameTextField.getText());
+                            try{
+                                product.setPrice(Integer.parseInt(priceTextField.getText()));
+                                product.setQuantity(Integer.parseInt(quantityTextField.getText()));
+                                saveData(product);
+                                jFrame.dispose();
+                            }catch(Exception exception){
+                                JOptionPane.showMessageDialog(jFrame, "Price or Quantity has to a number.");
+                            }
+
+                        }
+                    });
+
+
+
+                    jPanel.add(nameLabel);jPanel.add(nameTextField);jPanel.add(new JSeparator());
+                    jPanel.add(priceLabel);jPanel.add(priceTextField);jPanel.add(new JSeparator());
+                    jPanel.add(quantityLabel);jPanel.add(quantityTextField);jPanel.add(new JSeparator());
+                    jPanel.add(updateButton);jPanel.add(new JSeparator());
+
+                    jFrame.invalidate();
+                    jFrame.revalidate();
+                    jFrame.repaint();
+
+                    jFrame.add(jPanel);
+
+                    jFrame.setVisible(true);
                 }else {
-                    System.out.println("nope");
+                    if (searchTextField.getText() == ""){
+                        JOptionPane.showMessageDialog(jFrame, "ID cant be empty");
+                    }else {
+                        if (isInteger){
+                            JOptionPane.showMessageDialog(jFrame, "The product with id :"+searchTextField.getText()+" cant be founded.");
+                        }else {
+                            JOptionPane.showMessageDialog(jFrame, "Only number please.");
+                        }
+
+                    }
+
+
                 }
             }
         });
 
-
-        JPanel jPanel = new JPanel();
         jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
         jPanel.add(searchLabel);jPanel.add(searchTextField);jPanel.add(updateButton);jPanel.add(new JSeparator());
-
-
-        frame.add(jPanel);
-        frame.setSize(500, 300);
-        frame.setVisible(true);
+        jFrame.add(jPanel);
+        jFrame.setSize(500, 300);
+        jFrame.setVisible(true);
     }
-    public Product findData(String id){
+    public Product findData(Long id){
         return productService.findById(id);
     }
     public void saveData(Product product){
         productService.saveProduct(product);
-        System.out.println("Product saved.");
+    }
+
+    public static boolean isStringInteger(String number ){
+        try{
+            Long.parseLong(number);
+        }catch(Exception e ){
+            return false;
+        }
+        return true;
     }
 }

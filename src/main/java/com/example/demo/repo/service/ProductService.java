@@ -13,6 +13,8 @@ public interface ProductService {
 
     List<Product> findAll();
 
-    Product findById(String id);
+    Product findById(Long id);
+
+    void deleteProduct(Product product);
 
 }

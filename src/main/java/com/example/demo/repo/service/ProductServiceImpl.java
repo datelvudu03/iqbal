@@ -31,10 +31,14 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
-    public Product findById(String id) {
-        Long idInt = Long.parseLong(id.substring(3));
-        System.out.println(idInt);
-        return productRepo.findById(idInt).orElse(null);
+    public Product findById(Long id) {
+        return productRepo.findById(id).orElse(null);
     }
+
+    @Override
+    public void deleteProduct(Product product) {
+        productRepo.delete(product);
+    }
+
 
 }
